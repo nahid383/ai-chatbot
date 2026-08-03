@@ -1,0 +1,23 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+backend/.env
+
+# ChromaDB / uploads (local dev data, not source)
+backend/chroma_data/*
+!backend/chroma_data/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+
+# OS / editor
+.DS_Store
+.vscode/
+*.log

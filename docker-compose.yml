@@ -1,0 +1,55 @@
+# Local development environment. Mirrors production shape closely so
+# "works in Docker locally" -> "works on Railway" with minimal surprises.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: swe23
+      POSTGRES_PASSWORD: swe23_password
+      POSTGRES_DB: swe23_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swe23 -d swe23_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      # Overrides .env's DATABASE_URL to point at the 'postgres' service
+      # name (Docker's internal DNS), not localhost, since these are
+      # separate containers on the same Docker network.
+      DATABASE_URL: postgresql://swe23:swe23_password@postgres:5432/swe23_ai
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - chroma_data:/app/chroma_data
+      - uploads_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  chroma_data:
+  uploads_data:
