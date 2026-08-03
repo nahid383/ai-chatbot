@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SWE23 AI Assistant
 
 RAG-based AI assistant for the SUST Software Engineering 2023 batch.
@@ -146,3 +147,6 @@ npm run dev
 - Automated tests, CI/CD, logging/monitoring, rate limiting
 
 We'll build these incrementally, same theory-first process as everything so far.
+=======
+# ai-chatbot
+>>>>>>> cd30544ba4e06e9c3af2c744c5f90cfd2144b575
